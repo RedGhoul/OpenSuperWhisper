@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>OpenSuperWhisper</RootNamespace>
+    <AssemblyName>OpenSuperWhisper</AssemblyName>
+    <Nullable>enable</Nullable>
+    <!-- Required by the LibraryImport source generator in NativeMethods. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <!-- NotifyIcon (system tray) comes from WinForms. -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <!-- Lets the project compile on Linux/macOS CI too; running still needs Windows. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!-- The CUDA runtime is x64-only. -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- WinForms is only used for the tray icon; keep its types out of the global namespace
+         so they don't clash with WPF (Application, MessageBox, ...). -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\app.ico" />
+    <None Include="Assets\app.ico" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio.WinMM" Version="3.1.0" />
+    <PackageReference Include="Whisper.net" Version="1.9.1" />
+    <!-- Native whisper.cpp builds. At startup Whisper.net picks the first one that loads
+         on this machine, in the order set in WhisperTranscriber.ConfigureRuntime. -->
+    <PackageReference Include="Whisper.net.Runtime" Version="1.9.1" />
+    <PackageReference Include="Whisper.net.Runtime.Cuda.Windows" Version="1.9.1" />
+    <PackageReference Include="Whisper.net.Runtime.Vulkan" Version="1.9.1" />
+  </ItemGroup>
+
+</Project>
