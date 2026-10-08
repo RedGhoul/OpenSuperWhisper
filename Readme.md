@@ -31,6 +31,9 @@ Or from [GitHub releases page](https://github.com/Starmel/OpenSuperWhisper/relea
 
 - macOS (Apple Silicon/ARM64)
 
+A cross-platform version for Windows, Linux and macOS, with GPU acceleration through CUDA, Vulkan or Metal,
+lives in [`desktop/`](desktop/README.md).
+
 ## Support
 
 If you encounter any issues or have questions, please:

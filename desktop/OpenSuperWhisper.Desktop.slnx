@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OpenSuperWhisper.Core/OpenSuperWhisper.Core.csproj" />
+    <Project Path="src/OpenSuperWhisper.Desktop/OpenSuperWhisper.Desktop.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OpenSuperWhisper.Core.Tests/OpenSuperWhisper.Core.Tests.csproj" />
+  </Folder>
+</Solution>

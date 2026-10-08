@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="OpenSuperWhisper.Views.IndicatorWindow"
+        Title="OpenSuperWhisper"
+        WindowDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        TransparencyBackgroundFallback="#202124"
+        CanResize="False"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Topmost="True"
+        Focusable="False"
+        SizeToContent="WidthAndHeight">
+    <Border CornerRadius="18" Background="#E6202124" Padding="14,8" Margin="8" IsHitTestVisible="False">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="10">
+            <Ellipse x:Name="Dot" Width="10" Height="10" Fill="#EA4335" VerticalAlignment="Center" />
+            <!-- Mic level: fixed track, the fill width follows the input peak. -->
+            <Panel x:Name="LevelTrack" Width="48" Height="6" VerticalAlignment="Center">
+                <Border CornerRadius="3" Background="#33FFFFFF" />
+                <Border x:Name="LevelFill" CornerRadius="3" Background="White" HorizontalAlignment="Left" Width="0" />
+            </Panel>
+            <TextBlock x:Name="Label" Foreground="White" FontSize="13" VerticalAlignment="Center" MaxWidth="420"
+                       TextWrapping="Wrap" Text="Listening" />
+        </StackPanel>
+    </Border>
+</Window>

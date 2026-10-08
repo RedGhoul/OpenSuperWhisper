@@ -1,0 +1,54 @@
+name: Desktop Build (Windows, macOS, Linux)
+
+on:
+  push:
+    paths:
+      - 'desktop/**'
+      - 'jfk.wav'
+      - 'ggml-tiny.en.bin'
+      - '.github/workflows/desktop-build.yml'
+  pull_request:
+    paths:
+      - 'desktop/**'
+      - '.github/workflows/desktop-build.yml'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            rid: win-x64
+            test: true
+          - os: ubuntu-latest
+            rid: linux-x64
+            test: true
+          # GitHub's macOS runners have no usable Metal device, which the macOS whisper.cpp build expects,
+          # so only build and publish there.
+          - os: macos-latest
+            rid: osx-arm64
+            test: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build
+        working-directory: desktop
+        run: dotnet build -c Release
+      - name: Test
+        if: matrix.test
+        working-directory: desktop
+        run: dotnet test -c Release --no-build
+      - name: Publish
+        working-directory: desktop
+        run: dotnet publish src/OpenSuperWhisper.Desktop -c Release -r ${{ matrix.rid }} --self-contained -o publish/${{ matrix.rid }}
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenSuperWhisper-${{ matrix.rid }}
+          path: desktop/publish/${{ matrix.rid }}

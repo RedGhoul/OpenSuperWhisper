@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- WinExe hides the console window on Windows; it behaves like Exe on macOS and Linux. -->
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>OpenSuperWhisper</RootNamespace>
+    <AssemblyName>OpenSuperWhisper</AssemblyName>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <Version>0.2.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.1.3" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.3" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.3" />
+    <!-- Native whisper.cpp builds. At startup Whisper.net loads the first one that works on this machine, in the
+         order set by WhisperTranscriber.ConfigureRuntime. The CPU package also carries the Metal build for macOS. -->
+    <PackageReference Include="Whisper.net.Runtime" Version="1.9.1" />
+    <PackageReference Include="Whisper.net.Runtime.Cuda" Version="1.9.1" />
+    <PackageReference Include="Whisper.net.Runtime.Vulkan" Version="1.9.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenSuperWhisper.Core\OpenSuperWhisper.Core.csproj" />
+  </ItemGroup>
+
+  <!-- The Whisper.net runtime packages copy native builds for every OS and CPU into runtimes/. When publishing for one
+       platform (-r win-x64, osx-arm64, linux-x64, ...), keep only that platform's builds; this saves ~400 MB. -->
+  <Target Name="TrimForeignWhisperRuntimes" BeforeTargets="AssignTargetPaths" Condition="'$(RuntimeIdentifier)' != ''">
+    <PropertyGroup>
+      <_WhisperPlatform>$(RuntimeIdentifier.Replace('osx-', 'macos-'))</_WhisperPlatform>
+    </PropertyGroup>
+    <ItemGroup>
+      <_ForeignWhisperRuntime Include="@(None)"
+                              Condition="$([System.String]::Copy('%(None.TargetPath)').StartsWith('runtimes/')) And !$([System.String]::Copy('%(None.TargetPath)').Contains('/$(_WhisperPlatform)/'))" />
+      <None Remove="@(_ForeignWhisperRuntime)" />
+    </ItemGroup>
+  </Target>
+
+</Project>
