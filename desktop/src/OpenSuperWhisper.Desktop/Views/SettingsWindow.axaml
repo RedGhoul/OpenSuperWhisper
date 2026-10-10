@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="OpenSuperWhisper.Views.SettingsWindow"
+        Title="OpenSuperWhisper Settings"
+        Icon="avares://OpenSuperWhisper/Assets/app.png"
+        Width="640" Height="760" MinWidth="520" MinHeight="480"
+        WindowStartupLocation="CenterScreen">
+    <Window.Styles>
+        <Style Selector="TextBlock.section">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,20,0,8" />
+        </Style>
+        <Style Selector="TextBlock.hint">
+            <Setter Property="Opacity" Value="0.65" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+        </Style>
+    </Window.Styles>
+
+    <ScrollViewer>
+        <StackPanel Margin="24,4,24,24">
+
+            <TextBlock Classes="section" Text="Model" />
+            <StackPanel x:Name="ModelList" Spacing="2" />
+            <TextBlock x:Name="ModelsFolderHint" Classes="hint" />
+
+            <TextBlock Classes="section" Text="Acceleration" />
+            <ComboBox x:Name="BackendBox" Width="300" SelectionChanged="OnBackendChanged">
+                <ComboBoxItem Tag="Auto" Content="Automatic" />
+                <ComboBoxItem Tag="Cuda" Content="NVIDIA CUDA" />
+                <ComboBoxItem Tag="Vulkan" Content="Vulkan (NVIDIA, AMD, Intel)" />
+                <ComboBoxItem Tag="Cpu" Content="CPU (Metal on Apple Silicon)" />
+            </ComboBox>
+            <TextBlock x:Name="BackendStatus" Classes="hint" />
+
+            <TextBlock Classes="section" Text="Language" />
+            <ComboBox x:Name="LanguageBox" Width="300" SelectionChanged="OnLanguageChanged" />
+            <TextBlock x:Name="LanguageHint" Classes="hint" IsVisible="False"
+                       Text="The selected model is English-only, so this setting is ignored." />
+
+            <TextBlock Classes="section" Text="Microphone" />
+            <ComboBox x:Name="MicrophoneBox" Width="400" SelectionChanged="OnMicrophoneChanged" />
+
+            <TextBlock Classes="section" Text="Shortcut" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Padding="10,5" MinWidth="200">
+                    <TextBlock x:Name="HotkeyText" VerticalAlignment="Center" />
+                </Border>
+                <Button x:Name="ChangeHotkeyButton" Content="Change…" Click="OnChangeHotkey" />
+                <Button Content="Reset" Click="OnResetHotkey" />
+            </StackPanel>
+            <TextBlock x:Name="HotkeyHint" Classes="hint"
+                       Text="Press Esc while recording to cancel." />
+            <CheckBox x:Name="HoldToRecordBox" Margin="0,10,0,0" IsCheckedChanged="OnOptionChanged"
+                      Content="Hold to record, release to transcribe (a quick tap toggles instead)" />
+
+            <TextBlock Classes="section" Text="Output" />
+            <CheckBox x:Name="AutoPasteBox" IsCheckedChanged="OnOptionChanged"
+                      Content="Paste into the focused app (otherwise only copy to the clipboard)" />
+            <CheckBox x:Name="TrailingSpaceBox" IsCheckedChanged="OnOptionChanged"
+                      Content="Add a space after the text" />
+            <TextBlock Text="Initial prompt (names, jargon, punctuation style):" Margin="0,12,0,4" />
+            <TextBox x:Name="PromptBox" Height="64" TextWrapping="Wrap" AcceptsReturn="True"
+                     LostFocus="OnPromptChanged" />
+
+            <TextBlock x:Name="LogHint" Classes="hint" Margin="0,20,0,0" />
+        </StackPanel>
+    </ScrollViewer>
+</Window>
